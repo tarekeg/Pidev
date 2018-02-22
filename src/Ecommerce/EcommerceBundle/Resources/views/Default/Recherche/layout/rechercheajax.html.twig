@@ -1,0 +1,35 @@
+<form method="POST" class="navbar-form form-search pull-right">
+    <input  type="text" name="nom" id="s">
+    <div id="search_suggest">
+        <div class="list-group"></div>
+    </div>
+</form>
+<script src="{{ asset('js/jquery-1.10.0.min.js') }}"></script>
+<script>
+    $(function() {
+        $("#s").keyup(function () {
+            var input=$("#s").val();
+            $.ajax({
+                url:"{{ path('searchajax') }}",
+                type: "POST",
+                data:{'nom':input },
+                success:function (data) {
+                    var data = $('<div />').html(data);
+                    var list = data.find('.product-name').clone();
+                    $('#productList').html(data);
+                    $("#search_suggest .list-group ").html(list);
+                }
+            });
+        });
+        $('#search_suggest').on('click','h4',function(){
+            $("#s").val($(this).text());
+            $("#s").keyup();
+        });
+
+        $(document).click(function (e) {
+            if ($(e.target).parents(".list-group").length === 0) {
+                $('#search_suggest .list-group >').remove();
+            }
+        });
+    });
+</script>

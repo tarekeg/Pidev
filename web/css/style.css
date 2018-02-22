@@ -1,0 +1,24 @@
+body {
+	padding-bottom: 40px;
+    padding-top: 60px;
+}
+#search_suggest{
+    position: relative;
+}
+.list-group{
+    position: absolute;
+    left: 0;
+    right: 0;
+    list-style: none;
+    background: #fff;
+    margin: 0;
+    top: -2px;
+}
+.list-group > h4{
+    padding: 0px 10px;
+    font-size: 12px;
+}
+.list-group > h4:hover{
+    opacity: 0.2;
+    cursor: pointer;
+}

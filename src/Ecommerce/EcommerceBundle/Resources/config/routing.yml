@@ -1,0 +1,9 @@
+pages_adminPages:
+    resource: "@EcommerceBundle/Resources/config/routingAdmin.yml"
+    prefix:   /admin/produits
+routingPanier:
+    resource: "@EcommerceBundle/Resources/config/routing/routingPanier.yml"
+    prefix: /panier
+routingProduit:
+    resource: "@EcommerceBundle/Resources/config/routing/routingProduits.yml"
+    prefix: /

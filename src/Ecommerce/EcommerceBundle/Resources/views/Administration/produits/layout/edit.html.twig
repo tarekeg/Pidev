@@ -1,0 +1,26 @@
+{% extends 'layout/layoutAdmin.html.twig' %}
+
+{% block body %}
+    <h1>Produit edit</h1>
+
+
+
+    <ul>
+
+            {{ form_start(edit_form) }}
+            {{ form_widget(edit_form) }}
+
+
+            <input class="btn-success" type="submit" value="Edit" />
+            {{ form_end(edit_form) }}
+
+        <li>
+            {{ form_start(delete_form) }}
+                <input class="btn-danger" type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+        <li>
+            <a href="{{ path('adminProduits_index') }}">Back to the list</a>
+        </li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,9 @@
+services:
+      Ecommerce\EcommerceBundle\Twig\Extension\TvaExtension:
+          tags:
+            - { name: twig.extension }
+
+      Ecommerce\EcommerceBundle\Listener\RedirectionListener:
+          arguments: ['@service_container','@session','@security.token_storage']
+          tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
