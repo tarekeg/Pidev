@@ -12,13 +12,16 @@ use Symfony\Component\Serializer\Serializer;
 
 class produitsController extends Controller
 {
-    public function categoriesAction($categorie)
+    public function categoriesAction(Request $request,$categorie)
     {
         $em = $this->getDoctrine()->getManager();
-        $produits = $em->getRepository('EcommerceBundle:Produits')->ByCategorie($categorie);
+        $findproduits = $em->getRepository('EcommerceBundle:Produits')->ByCategorie($categorie);
 
         $categorie = $em->getRepository('EcommerceBundle:Categories')->find($categorie);
         if (!$categorie) throw $this->createNotFoundException('La page n\'existe pas.');
+        $produits  = $this->get('knp_paginator')->paginate($findproduits,$request->query->getInt('page', 1), 3);
+
+
 
         return $this->render('EcommerceBundle:Default/produits/layout:produits.html.twig',array('produits' => $produits));
 
