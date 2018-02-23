@@ -16,7 +16,8 @@ validation:
 livraisonAdresseSuppression:
     path:  /livraison/adresse/suppression/{id}
     defaults: { _controller: EcommerceBundle:panier:adresseSuppression }
-validationPdf:
-    path:  /livraison/adresse/PDF
+pdfValidation:
+    path:  /path/to/the/file.pdf
     defaults: { _controller: EcommerceBundle:panier:pdf }
+
 

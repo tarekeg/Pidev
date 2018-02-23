@@ -6,8 +6,8 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div>
-                {% include ':moduleUsed:navigationAdmin.html.twig' %}
+            <div class="span3">
+                {% include ':moduleUsed:navigation.html.twig' %}
             </div>
 
             <div class="span9">
@@ -27,12 +27,12 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% if commande|length == 0 %}
+                    {% if produits|length == 0 %}
                         <tr>
                             <td colspan="4"><center>Aucun articles dans votre panier</center></td>
                         </tr>
                     {% endif %}
-                    {% for commande in commande %}
+                    {% for produit in produits %}
                         <tr>
                             <form action="{{ path('ajouter', { 'id' : produit.id }) }}" method="get">
                                 <td>{{ produit.nom }}</td>
@@ -72,6 +72,7 @@
                 <div class="clearfix"></div>
                 <a href="#" class="btn btn-success pull-right">Payer</a>
                 <a href="{{ path('livraison') }}" class="btn btn-primary">retour</a>
+                <a href="{{ path('pdfValidation') }}" class="btn btn-primary pull-left" >Générer Pdf</a>
             </div>
         </div>
     </div>

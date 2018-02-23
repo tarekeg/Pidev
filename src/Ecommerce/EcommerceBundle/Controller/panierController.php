@@ -4,10 +4,12 @@ namespace Ecommerce\EcommerceBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Ecommerce\EcommerceBundle\Entity\UtilisateursAdresses;
 use Ecommerce\EcommerceBundle\Form\UtilisateursAdressesType;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class panierController extends Controller
 {
@@ -146,25 +148,47 @@ class panierController extends Controller
             $this->setLivraisonOnSession($request);
 
         $em = $this->getDoctrine()->getManager();
+        $session = $request->getSession();
+        $adresse = $session->get('adresse');
 
-        $prepareCommande = $this->forward('EcommerceBundle:Commandes:prepareCommande');
+        $produits = $em->getRepository('EcommerceBundle:Produits')->findArray(array_keys($session->get('panier')));
+        $livraison = $em->getRepository('EcommerceBundle:UtilisateursAdresses')->find($adresse['livraison']);
+        $facturation = $em->getRepository('EcommerceBundle:UtilisateursAdresses')->find($adresse['facturation']);
 
-        $commande = $em->getRepository('EcommerceBundle:Commandes')->find($prepareCommande->getContent());
-
-        return $this->render('EcommerceBundle:Default:panier/layout/validation.html.twig', array('commande' => $commande));
+        return $this->render('EcommerceBundle:Default:panier/layout/validation.html.twig', array('produits' => $produits,
+            'livraison' => $livraison,
+            'facturation' => $facturation,
+            'panier' => $session->get('panier')));
     }
 
-    public function pdfAction()
+    public function pdfAction (Request $request)
     {
-        $html = $this->renderView('@Ecommerce/Default/panier/layout/validation.html.twig'
+        $date = new DateTime();
+        $em = $this->getDoctrine()->getManager();
+        $session = $request->getSession();
+        $adresse = $session->get('adresse');
 
-        );
+        $produits = $em->getRepository('EcommerceBundle:Produits')->findArray(array_keys($session->get('panier')));
+        $livraison = $em->getRepository('EcommerceBundle:UtilisateursAdresses')->find($adresse['livraison']);
+        $facturation = $em->getRepository('EcommerceBundle:UtilisateursAdresses')->find($adresse['facturation']);
 
-        return new PdfResponse(
 
+        $html = $this->renderView('@Ecommerce/Default/panier/layout/pdf.html.twig', array(
+                'date' => $date,
+                'produits' => $produits,
+                'livraison' => $livraison,
+                'facturation' => $facturation,
+                'panier' => $session->get('panier')));
+
+        return new Response(
             $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
-
-            'file.pdf'
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'attachment; filename="file.pdf"'
+            )
         );
     }
+
+
 }

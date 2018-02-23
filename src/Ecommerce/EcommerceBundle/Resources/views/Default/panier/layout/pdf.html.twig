@@ -1,0 +1,112 @@
+
+<head>
+<link href="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('css/bootstrap.css') }}" rel="stylesheet"/>
+<link href="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('css/style.css') }}" rel="stylesheet"/>
+<link href="{{ app.request.scheme ~'://' ~ app.request.httpHost ~ asset('js/jquery-1.10.0.min.js') }}" />
+</head>
+<body>
+{% set totalHT = 0 %}
+{% set totalTTC = 0%}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="invoice-title">
+                <h2>Sa7ti.tn</h2><h3 class="pull-right">Order # </h3>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-xs-6">
+                    <address>
+                        <strong>Adresse de facturation:</strong><br>
+                        {{ facturation.prenom }} {{ facturation.nom }}<br>
+                        {{ facturation.adresse }}<br>
+                        {{ facturation.cp }} {{ facturation.ville }}<br>
+                        {{ facturation.pays }}
+                    </address>
+                </div>
+                <div class="col-xs-6 text-right">
+                        <address>
+                            <strong>Adresse de livraison:</strong><br>
+                            {{ livraison.prenom }} {{ livraison.nom }}<br>
+                            {{ livraison.adresse }}<br>
+                            {{ livraison.cp }} {{ livraison.ville }}<br>
+                            {{ livraison.pays }}
+                        </address>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <address>
+                        <strong>Payment Method:</strong><br>
+                        Visa ending **** 4242<br>
+                        jsmith@email.com
+                    </address>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <address>
+                        <strong>Date de commande:</strong><br>
+                        {{ "now"|date("m/d/Y") }}<br><br>
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>Résumé commande</strong></h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
+                            <tr>
+                                <td><strong>Réferences</strong></td>
+                                <td class="text-center"><strong>Prix unitaire</strong></td>
+                                <td class="text-center"><strong>Quantité</strong></td>
+                                <td class="text-right"><strong>Total HT</strong></td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for produit in produits %}
+                            <tr>
+                                <td>{{ produit.nom }}</td>
+                                <td class="text-center">{{ produit.prix }} DT</td>
+                                <td class="text-center">{{ panier[produit.id] }}</td>
+                                <td class="text-right">{{ produit.prix * panier[produit.id] }} DT</td>
+                            </tr>
+                            {% set totalHT = totalHT + (produit.prix * panier[produit.id]) %}
+                            {% set totalTTC = totalTTC + (produit.prix * panier[produit.id])|tva(produit.tva.multiplicate) %}
+                            {% endfor %}
+                            <tr>
+                                <td class="thick-line"></td>
+                                <td class="thick-line"></td>
+                                <td class="thick-line text-center"><strong>Total HT:</strong></td>
+                                <td class="thick-line text-right">{{ totalHT }} DT</td>
+                            </tr>
+                            <tr>
+                                <td class="no-line"></td>
+                                <td class="no-line"></td>
+                                <td class="no-line text-center"><strong>TVA:</strong></td>
+                                <td class="no-line text-right">{{ totalTTC - totalHT }}</td>
+                            </tr>
+                            <tr>
+                                <td class="no-line"></td>
+                                <td class="no-line"></td>
+                                <td class="no-line text-center"><strong>Total:</strong></td>
+                                <td class="no-line text-right">{{ totalTTC }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
